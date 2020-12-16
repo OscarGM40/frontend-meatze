@@ -11,7 +11,7 @@ import {
   Toolbar,
   Typography,
 } from "@material-ui/core";
-import React from "react";
+import React, { useState } from "react";
 import CloseIcon from "@material-ui/icons/Close";
 import CreateAndUpdatePantalla from "./CreateAndUpdatePantalla";
 
@@ -30,7 +30,18 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export const DialogPantalla = ({ openModal, closeModal }) => {
+ 
   const classes = useStyles();
+  const [enviado, setEnviado] = useState(false)
+
+  const enviar = ()=>{
+    setEnviado(true);
+  
+    setTimeout(() => {
+
+      setEnviado(false);
+    }, 500);
+  }
 
   return (
     <>
@@ -53,13 +64,13 @@ export const DialogPantalla = ({ openModal, closeModal }) => {
             <Typography variant="h6" className={classes.title}>
               Sound
             </Typography>
-            <Button autoFocus color="inherit" onClick={closeModal}>
+            <Button autoFocus color="inherit" onClick={enviar} type="submit">
               save
             </Button>
           </Toolbar>
         </AppBar>
 
-        <CreateAndUpdatePantalla />
+        <CreateAndUpdatePantalla enviado={enviado} />
 
       </Dialog>
     </>

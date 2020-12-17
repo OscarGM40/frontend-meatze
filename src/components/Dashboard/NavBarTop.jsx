@@ -26,8 +26,8 @@ const NavBarTop = (props) => {
             <Typography variant="h6">Multimedia</Typography>
           </Grid>
           <Grid item>
-            <IconButton >
-                <MenuIcon onClick={()=> props.accionAbrir()} />
+            <IconButton  onClick={()=> props.accionAbrir()}>
+                <MenuIcon />
             </IconButton>
           </Grid>
         </Grid>

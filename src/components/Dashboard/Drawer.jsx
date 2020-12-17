@@ -7,7 +7,6 @@ const drawerWidth = 240;
 
 const estilosCajon = makeStyles(theme => {
  
-    console.log(theme.mixins.toolbar)
     return( { drawer:{
         width:drawerWidth,
         flexShrink:0,

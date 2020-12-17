@@ -15,9 +15,6 @@ const estilos = makeStyles(theme => ({
         backgroundColor: theme.palette.background.default,
         padding: theme.spacing(3),
     },
-
-
-
    }));
 
 
@@ -32,7 +29,7 @@ const Dashboard = () => {
    
   /* cerrarModal va para el DialogPantalla,para que se pueda cerrar*/
   const cerrarModal = () => {
-    setAbrirModal(false);
+     setAbrirModal(false);
   }
 
      /*manejarModal va para el boton en la NavBarBottom,es un ToogleButton */

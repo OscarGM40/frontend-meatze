@@ -10,7 +10,7 @@ import {
   Paper,
   TextField,
 } from "@material-ui/core";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
 import ExpandLessIcon from "@material-ui/icons/ExpandLess";
 
@@ -39,16 +39,14 @@ const useStyle = makeStyles((theme) => ({
     paddingBottom: 0,
   },
 
-  "miclase::before, miclase::after": {
-    content: "none",
-  },
 }));
 
 /*Funcion que declara el componente */
 const CreateAndUpdatePantalla = (props) => {
+ 
   const classes = useStyle();
 
-  const estadoFormulario = {
+   const estadoFormulario = {
     nombre: "",
     descripcion: "",
     marca: "",
@@ -61,27 +59,35 @@ const CreateAndUpdatePantalla = (props) => {
     lista: "",
   };
 
-  const [datosPantalla, setDatosPantalla] = useState(estadoFormulario);
+ /*  const [datosPantalla, setDatosPantalla] = useState(estadoFormulario);
+ */
 
   useEffect(() => {
     if (props.enviado) {
       let boton = document.getElementById("btn-enviar");
       boton.click();
+      
     }
+    
   }, [props.enviado]);
 
-  const { control, errors, handleSubmit, register } = useForm();
+  const { control, errors, handleSubmit,reset } = useForm({defaultValues:{ nombre: "",
+  descripcion: "",
+  marca: "",
+  modelo: "",
+  orientacion: "VERTICAL",
+  ancho: "",
+  alto: "",
+  latitud: "",
+  longitud: "",
+  lista: "",}});
 
-  const handleChange = (event) => {
-    setDatosPantalla({
-      ...datosPantalla,
-      [event.target.name]: event.target.value,
-    });
-  };
 
   const crearPantalla = (data, event) => {
     console.log(data, "data");
-    console.log(datosPantalla, "estado");
+    reset(estadoFormulario);
+   
+   
   };
 
   return (
@@ -98,24 +104,22 @@ const CreateAndUpdatePantalla = (props) => {
       <CardContent>
         <form onSubmit={handleSubmit(crearPantalla)}>
           <FormControl fullWidth>
+           
             <Controller
               name="nombre"
               as={
                 <TextField
-                  name="nombre"
                   variant="outlined"
                   label="Nombre"
                   margin="dense"
                   helperText={
                     errors.nombre ? errors.nombre.message : "Ingrese su nombre"
                   }
-                  onChange={handleChange}
-                  value={datosPantalla.nombre}
                   error={!!errors.nombre}
                 />
               }
               control={control}
-              defaultValue=""
+             
               rules={{
                 required: {
                   value: true,
@@ -134,7 +138,6 @@ const CreateAndUpdatePantalla = (props) => {
               name="descripcion"
               as={
                 <TextField
-                  name="descripcion"
                   variant="outlined"
                   margin="dense"
                   rows="3"
@@ -145,8 +148,6 @@ const CreateAndUpdatePantalla = (props) => {
                       ? errors.descripcion.message
                       : "Describe un resumen de uso de esta pantalla"
                   }
-                  onChange={handleChange}
-                  value={datosPantalla.descripcion}
                   error={!!errors.descripcion}
                 />
               }
@@ -176,7 +177,6 @@ const CreateAndUpdatePantalla = (props) => {
                       className={classes.controlIzquierdo}
                       margin="dense"
                       autoComplete="off"
-                      name="marca"
                       label="Marca"
                       helperText={
                         errors.marca || errors.modelo
@@ -187,8 +187,6 @@ const CreateAndUpdatePantalla = (props) => {
                             }`
                           : "Datos referidos al equipo físico"
                       }
-                      onChange={handleChange}
-                      value={datosPantalla.marca}
                       error={!!errors.marca}
                     />
                   }
@@ -209,17 +207,13 @@ const CreateAndUpdatePantalla = (props) => {
                   as={
                     <TextField
                       label="Modelo"
-                      name="modelo"
                       className={classes.controlDerecho}
                       variant="outlined"
                       margin="dense"
-                      onChange={handleChange}
-                      value={datosPantalla.modelo}
                       error={!!errors.modelo}
                     />
                   }
                   control={control}
-                  defaultValue=""
                   rules={{
                     required: {
                       value: false,
@@ -232,30 +226,29 @@ const CreateAndUpdatePantalla = (props) => {
           </Grid>
 
           <FormControl fullWidth>
-            <Controller
+             <Controller
               name="orientacion"
-              as={
+              
+              as={ 
                 <TextField
+                  defaultValue="HORIZONTAL"
                   variant="outlined"
                   margin="dense"
                   select
-                  name="orientacion"
                   label="Orientación"
                   helperText={
                     errors.orientacion
                       ? errors.orientacion.message
-                      : "Seleciione el tipo de orientación"
+                      : "Seleccione el tipo de orientación"
                   }
-                  onChange={handleChange}
-                  value={datosPantalla.orientacion}
-                  error={!!errors.orientacion}
+                  // error={!!errors.orientacion}
                 >
                   <MenuItem selected value="HORIZONTAL">
                     Horizontal
                   </MenuItem>
                   <MenuItem value="VERTICAL">Vertical</MenuItem>
                 </TextField>
-              }
+               }
               control={control}
               defaultValue=""
               rules={{
@@ -265,34 +258,79 @@ const CreateAndUpdatePantalla = (props) => {
                     "Requerido seleccionar la orientacion de la pantalla",
                 },
               }}
-            />
+            /> 
           </FormControl>
 
           <Grid container style={{ paddingBottom: 25 }}>
             <Grid item xs={6}>
               <FormControl>
+                
+              <Controller
+              name="ancho"
+              as={
                 <TextField
                   margin="dense"
-                  name="ancho"
                   label="Ancho"
                   className={classes.controlIzquierdo}
                   variant="outlined"
-                  helperText="Resolución en pixeles"
-                  onChange={handleChange}
-                  value={datosPantalla.ancho}
+                  helperText={
+                    errors.ancho || errors.alto
+                      ? `${
+                          errors.ancho ? `${errors.ancho.message}` : ""
+                        }  ${
+                          errors.alto ? ` ${errors.alto.message}` : ""
+                        }`
+                      : "Resolución en pixeles"
+                  }
+                  error={!!errors.ancho}
                 />
+
+              }
+              control={control}
+              defaultValue=""
+              rules={{
+                required: {
+                  value: true,
+                  message:
+                    "Seleccione un ancho",
+                  },
+                  pattern:{
+                    value:/^[0-9]*$/,
+                    message:"Debe ingresar un número"
+                  }
+              }}
+            />
+
               </FormControl>
             </Grid>
             <Grid item xs={6}>
               <FormControl>
+
+              <Controller
+              name="alto"
+              as={
                 <TextField
-                  name="alto"
                   label="Alto"
                   variant="outlined"
                   className={classes.controlDerecho}
                   margin="dense"
-                  onChange={handleChange}
+                  error={!!errors.alto}
                 />
+              }
+              control={control}
+              defaultValue=""
+              rules={{
+                required: {
+                  value: true,
+                  message:
+                    "Seleccione un alto",
+                },
+                pattern:{
+                  value:/^[0-9]*$/,
+                  message:"Debe ingresar un número"
+                }
+              }}
+            />
               </FormControl>
             </Grid>
           </Grid>
@@ -301,49 +339,108 @@ const CreateAndUpdatePantalla = (props) => {
           <Grid container style={{ paddingBottom: 25 }}>
             <Grid item xs={6}>
               <FormControl>
+
+              <Controller
+              name="latitud"
+              error={!!errors.latitud}
+              as={
                 <TextField
                   margin="dense"
-                  name="latitud"
                   label="Latitud"
                   className={classes.controlIzquierdo}
                   variant="outlined"
-                  helperText="Coordenadas de ubicación"
-                  onChange={handleChange}
-                  value={datosPantalla.latitud}
+                  helperText={
+                    errors.latitud || errors.longitud
+                      ? `${
+                          errors.latitud ? `${errors.latitud.message}` : ""
+                        }  ${
+                          errors.longitud ? ` ${errors.longitud.message}` : ""
+                        }`
+                      : "Coordenadas de ubicación"
+                  }
+                  
                 />
+              }
+              control={control}
+              defaultValue=""
+              rules={{
+                required: {
+                  value: false,
+                  message:
+                    "",
+                },
+                pattern:{
+                  value:/^[.0-9]*$/,
+                  message:"Formato de latitud incorrecto"
+                }
+              }}
+            />
               </FormControl>
             </Grid>
             <Grid item xs={6}>
               <FormControl>
+              <Controller
+              name="longitud"
+              error={!!errors.latitud}
+              as={
                 <TextField
-                  name="longitud"
                   label="Longitud"
                   variant="outlined"
                   className={classes.controlDerecho}
                   margin="dense"
-                  onChange={handleChange}
-                  value={datosPantalla.longitud}
+                  
                 />
+              }
+              control={control}
+              defaultValue=""
+              rules={{
+                required: {
+                  value: false,
+                  message:
+                    "",
+                },
+                pattern:{
+                  value:/^[.0-9]*$/,
+                  message:"Formato de longitud incorrecto"
+                }
+              }}
+            />
               </FormControl>
             </Grid>
           </Grid>
 
           <FormControl fullWidth>
+          <Controller
+              name="lista"
+              error={!!errors.lista}
+              as={
+
             <TextField
               variant="outlined"
               margin="dense"
               select
-              name="lista"
               label="Lista"
               helperText="Seleccione la lista a reproducir"
-              onChange={handleChange}
-              value={datosPantalla.lista}
             >
+
+              
               <MenuItem selected value="LISTA 1">
                 Lista 1
               </MenuItem>
               <MenuItem value="LISTA 2">Lista 2</MenuItem>
             </TextField>
+
+                }
+                control={control}
+                defaultValue=""
+                rules={{
+                  required: {
+                    value: false,
+                    message:
+                      "",
+                  }
+                }}
+                />
           </FormControl>
 
           <Button

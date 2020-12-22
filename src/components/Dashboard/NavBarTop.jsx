@@ -16,7 +16,7 @@ const useStyles = makeStyles((theme)=>({
 const NavBarTop = (props) => {
     const classes = useStyles();
   return (
-    <AppBar position="static">
+    <AppBar position="sticky">
       <Toolbar>
         <Grid container alignItems="center">
             <Grid item>

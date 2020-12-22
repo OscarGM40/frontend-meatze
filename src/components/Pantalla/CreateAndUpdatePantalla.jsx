@@ -38,6 +38,9 @@ const useStyle = makeStyles((theme) => ({
   botonScroll: {
     paddingBottom: 0,
   },
+  buttonGhost:{
+    display:'none'
+  }
 
 }));
 
@@ -71,11 +74,18 @@ const CreateAndUpdatePantalla = (props) => {
     
   }, [props.enviado]);
 
+  useEffect(() => {
+
+    const papel = document.querySelector('#papel');
+    papel.scrollTop = 0;
+  
+  }, []);
+
   const { control, errors, handleSubmit,reset } = useForm({defaultValues:{ nombre: "",
   descripcion: "",
   marca: "",
   modelo: "",
-  orientacion: "VERTICAL",
+  orientacion: "",
   ancho: "",
   alto: "",
   latitud: "",
@@ -86,15 +96,20 @@ const CreateAndUpdatePantalla = (props) => {
   const crearPantalla = (data, event) => {
     console.log(data, "data");
     reset(estadoFormulario);
-   
-   
+      
   };
+
+  const resetearScroll=() => {
+    const papel = document.querySelector('#papel');
+    papel.scrollTop = 0;
+  }
 
   return (
     <Paper
+      id="papel"
       elevation={2}
       className={classes.root}
-      style={{ overflowX: "hidden" }}
+      style={{ overflowX: "hidden",scrollBehavior:'smooth' }}
     >
       <CardHeader
         title="Meatze Barakaldo"
@@ -102,7 +117,7 @@ const CreateAndUpdatePantalla = (props) => {
         className={classes.alineacionHeader}
       />
       <CardContent>
-        <form onSubmit={handleSubmit(crearPantalla)}>
+        <form onSubmit={handleSubmit(crearPantalla)} autoComplete="off">
           <FormControl fullWidth>
            
             <Controller
@@ -110,6 +125,7 @@ const CreateAndUpdatePantalla = (props) => {
               as={
                 <TextField
                   variant="outlined"
+                  autoComplete="on"
                   label="Nombre"
                   margin="dense"
                   helperText={
@@ -123,11 +139,11 @@ const CreateAndUpdatePantalla = (props) => {
               rules={{
                 required: {
                   value: true,
-                  message: "requerido",
+                  message: "Requerido",
                 },
                 minLength: {
                   value: 8,
-                  message: "minimo 8 caracteres",
+                  message: "Minimo 8 caracteres",
                 },
               }}
             />
@@ -156,11 +172,11 @@ const CreateAndUpdatePantalla = (props) => {
               rules={{
                 required: {
                   value: true,
-                  message: "requerido",
+                  message: "Requerido",
                 },
                 minLength: {
                   value: 8,
-                  message: "minimo 8 caracteres",
+                  message: "Minimo 8 caracteres",
                 },
               }}
             />
@@ -241,7 +257,7 @@ const CreateAndUpdatePantalla = (props) => {
                       ? errors.orientacion.message
                       : "Seleccione el tipo de orientación"
                   }
-                  // error={!!errors.orientacion}
+                   error={!!errors.orientacion}
                 >
                   <MenuItem selected value="HORIZONTAL">
                     Horizontal
@@ -271,6 +287,7 @@ const CreateAndUpdatePantalla = (props) => {
                 <TextField
                   margin="dense"
                   label="Ancho"
+                  autoComplete="off"
                   className={classes.controlIzquierdo}
                   variant="outlined"
                   helperText={
@@ -280,9 +297,9 @@ const CreateAndUpdatePantalla = (props) => {
                         }  ${
                           errors.alto ? ` ${errors.alto.message}` : ""
                         }`
-                      : "Resolución en pixeles"
+                      : "Resolución en pixeles(inserte 3 ó 4 digitos)"
                   }
-                  error={!!errors.ancho}
+                  error={!!errors.ancho|| !!errors.alto}
                 />
 
               }
@@ -295,8 +312,8 @@ const CreateAndUpdatePantalla = (props) => {
                     "Seleccione un ancho",
                   },
                   pattern:{
-                    value:/^[0-9]*$/,
-                    message:"Debe ingresar un número"
+                    value:/^[0-9]{3,4}$/,
+                    message:"Debe ingresar 3 ó 4 digitos(Ancho)"
                   }
               }}
             />
@@ -311,6 +328,7 @@ const CreateAndUpdatePantalla = (props) => {
               as={
                 <TextField
                   label="Alto"
+                  autoComplete="off"
                   variant="outlined"
                   className={classes.controlDerecho}
                   margin="dense"
@@ -326,8 +344,8 @@ const CreateAndUpdatePantalla = (props) => {
                     "Seleccione un alto",
                 },
                 pattern:{
-                  value:/^[0-9]*$/,
-                  message:"Debe ingresar un número"
+                  value:/^\d{3,4}$/,
+                  message:"Debe ingresar 3 ó 4 digitos(alto)"
                 }
               }}
             />
@@ -342,7 +360,7 @@ const CreateAndUpdatePantalla = (props) => {
 
               <Controller
               name="latitud"
-              error={!!errors.latitud}
+              error={!!errors.latitud || !!errors.longitud}
               as={
                 <TextField
                   margin="dense"
@@ -369,9 +387,11 @@ const CreateAndUpdatePantalla = (props) => {
                   message:
                     "",
                 },
+                // Latitud +- 90 y longitud es +- 180
                 pattern:{
-                  value:/^[.0-9]*$/,
-                  message:"Formato de latitud incorrecto"
+                  // value:/^-?\d{1,3}\.\d{5,12}$/,
+                   value:/^-?([0-1]{0,1}[0-8]{0,1}[0-9]{0,1})\.\d{1,12}$/,
+                  message:"Formato de latitud incorrecto(Ej:124.4)"
                 }
               }}
             />
@@ -400,8 +420,8 @@ const CreateAndUpdatePantalla = (props) => {
                     "",
                 },
                 pattern:{
-                  value:/^[.0-9]*$/,
-                  message:"Formato de longitud incorrecto"
+                  value:/^-?\d{1,3}\.\d{1,12}$/,
+                  message:"Formato de longitud incorrecto(Ej:124.4)"
                 }
               }}
             />
@@ -449,12 +469,13 @@ const CreateAndUpdatePantalla = (props) => {
             id="btn-enviar"
             color="inherit"
             type="submit"
+            className={classes.buttonGhost}
           >
             save Pantalla
           </Button>
 
           <FormControl fullWidth>
-            <IconButton className={classes.botonScroll}>
+            <IconButton className={classes.botonScroll} onClick={resetearScroll}>
               <ExpandLessIcon fontSize="large" />
             </IconButton>
           </FormControl>

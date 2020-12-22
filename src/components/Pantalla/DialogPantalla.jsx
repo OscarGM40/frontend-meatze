@@ -26,10 +26,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export const DialogPantalla = ({ openModal, closeModal }) => {
+export const DialogPantalla = ({ openModal, closeModal,modificar }) => {
  
   const classes = useStyles();
   const [enviado, setEnviado] = useState(false)
+  
 
   const enviar = ()=>{
     setEnviado(true);

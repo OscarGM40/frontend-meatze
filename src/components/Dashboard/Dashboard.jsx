@@ -1,14 +1,18 @@
-import {  Dialog, Hidden, makeStyles } from "@material-ui/core";
+import {  CircularProgress, Dialog, Hidden, makeStyles, Typography } from "@material-ui/core";
 import Drawer from './Drawer'
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import NavBarTop from "./NavBarTop";
 import  NavBarBottom  from "./NavBarBottom";
 import { DialogPantalla } from "../Pantalla/DialogPantalla";
+import ListarPantallas from "../Pantalla/ListarPantallas";
+import {getPantallas} from './../../helpers/getPantallas';
+import { useFetchPantallas } from "../../hooks/useFetchPantallas";
+import NoMatch from "../utils/NoMatch";
+import Loading from "../utils/Loading";
+
 
 const estilos = makeStyles(theme => ({
-    root:{
-       display:'flex',
-    },
+
     toolbar: theme.mixins.toolbar,
     content: {
         flexGrow: 1,
@@ -18,14 +22,30 @@ const estilos = makeStyles(theme => ({
    }));
 
 
-const Dashboard = () => {
+const Dashboard = (props) => {
     const classes = estilos();
+
+    const { data, loading } = useFetchPantallas();
+
+useEffect(() => {
+    const mifuncion = async()=>{
+        const objetos = await getPantallas()
+
+        console.log(objetos,"Dashboard")
+    }
+    
+    mifuncion();
+
+},[])
+
     const accionAbrir = () => {
         setAbrir(!abrir);
     }
 
     const [abrir, setAbrir] = useState(false);
     const [abrirModal,setAbrirModal] = useState(false);
+    const [modificar, setModificar] = useState(false)
+
    
   /* cerrarModal va para el DialogPantalla,para que se pueda cerrar*/
   const cerrarModal = () => {
@@ -51,7 +71,29 @@ const Dashboard = () => {
         onClose={accionAbrir}
         />
     </Hidden>
-     <DialogPantalla openModal={abrirModal} closeModal={cerrarModal}/>
+
+    { loading && (<>
+        <Loading />
+    </>
+     ) }
+     {(data.length === 0 && !loading) && (
+         <NoMatch/>
+     )}
+   {
+       data.map(
+           (data) =>
+               
+                   <ListarPantallas key={data.id} data={data}
+                   setModificar={setModificar} modificar={modificar} onHandleModal={manejarModal}
+                   />
+       )
+   }
+
+
+          
+     <DialogPantalla openModal={abrirModal} closeModal={cerrarModal} modificar={modificar}/>
+     {props.children}
+
     <NavBarBottom onHandleModal={manejarModal}/>
   </div>
   );

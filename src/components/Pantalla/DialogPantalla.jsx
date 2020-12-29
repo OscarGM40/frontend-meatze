@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export const DialogPantalla = ({ openModal, closeModal,modificar }) => {
+export const DialogPantalla = ({ openModal, closeModal,setState }) => {
  
   const classes = useStyles();
   const [enviado, setEnviado] = useState(false)
@@ -68,7 +68,7 @@ export const DialogPantalla = ({ openModal, closeModal,modificar }) => {
           </Toolbar>
         </AppBar>
 
-        <CreateAndUpdatePantalla enviado={enviado} />
+        <CreateAndUpdatePantalla enviado={enviado} setState={setState}/>
 
       </Dialog>
     </>

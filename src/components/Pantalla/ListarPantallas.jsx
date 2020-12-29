@@ -27,7 +27,7 @@ const useStyle = makeStyles((theme) => ({
 }));
 
 const ListarPantallas = ({
-  data: { nombre, descripcion, marca, modelo, id },modificar,setModificar, onHandleModal
+  data: { nombre, descripcion, marca, modelo, id },modificar,setModificar,setState, onHandleModal
 }) => {
   const classes = useStyle();
 
@@ -50,8 +50,10 @@ const ListarPantallas = ({
     //console.log("ejecutando modificar")
     setModificar(true);
     onHandleModal();
-    console.log(id,"id")
+   // console.log(id,"id")
   }
+ 
+
 
   return (
     <Card elevation={3} className={classes.mainCard}>
@@ -81,7 +83,13 @@ const ListarPantallas = ({
         <MenuItem onClick={handleClose} >Eliminar</MenuItem>
         <MenuItem onClick={()=>{
           handleClose();
-        handleModificar();}} >Modificar</MenuItem>
+        handleModificar();
+        setState(state => ({
+         ...state,
+         modificar:true,
+         valueId:id
+        }));
+        }} >Modificar</MenuItem>
       </Menu>
       <CardContent className={classes.contentCard}>
         <Typography variant="body2" color="textSecondary" component="p">

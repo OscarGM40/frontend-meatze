@@ -10,9 +10,10 @@ import {
   Paper,
   TextField,
 } from "@material-ui/core";
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import ExpandLessIcon from "@material-ui/icons/ExpandLess";
+import { useFetchPantalla } from "../../hooks/useFetchPantalla";
 
 const useStyle = makeStyles((theme) => ({
   root: {
@@ -45,11 +46,18 @@ const useStyle = makeStyles((theme) => ({
 }));
 
 /*Funcion que declara el componente */
-const CreateAndUpdatePantalla = (props) => {
+const CreateAndUpdatePantalla = ({enviado,setState}) => {
  
+  const [idTarjeta, setIdTarjeta] = useState("")
+  const [modificar, setModificar] = useState(false)
+  
+  const {data,loading} = useFetchPantalla(idTarjeta);
+  console.log(data,'data recibida')
   const classes = useStyle();
-
-   const estadoFormulario = {
+  const papel = useRef(null);
+  const btnEnviar = useRef();
+  
+  const estadoFormulario = {
     nombre: "",
     descripcion: "",
     marca: "",
@@ -61,52 +69,57 @@ const CreateAndUpdatePantalla = (props) => {
     longitud: "",
     lista: "",
   };
-
- /*  const [datosPantalla, setDatosPantalla] = useState(estadoFormulario);
- */
-
+  console.log(idTarjeta,"idTarjeta")
+  
   useEffect(() => {
-    if (props.enviado) {
-      let boton = document.getElementById("btn-enviar");
-      boton.click();
+    if (enviado) {
+     
+      btnEnviar.current.click();
       
     }
     
-  }, [props.enviado]);
+  }, [enviado]);
+
+  
+     useEffect(() => {
+      setState((state)=>{
+        setIdTarjeta(state.valueId);
+        setModificar(state.modificar);
+     })
+     },[setState])
+   
+ 
+
+  
+  //console.log(datos.id,'create id')
+
+  const { control, errors, handleSubmit,reset } = useForm({defaultValues: true ? data : estadoFormulario});
 
   useEffect(() => {
-
-    const papel = document.querySelector('#papel');
-    papel.scrollTop = 0;
-  
-  }, []);
-
-  const { control, errors, handleSubmit,reset } = useForm({defaultValues:{ nombre: "",
-  descripcion: "",
-  marca: "",
-  modelo: "",
-  orientacion: "",
-  ancho: "",
-  alto: "",
-  latitud: "",
-  longitud: "",
-  lista: "",}});
+     
+    papel.current.scrollTop = 0;
+    reset(data)
+  }, [reset,data]);
 
 
   const crearPantalla = (data, event) => {
+    if(modificar){
+
+    }
     console.log(data, "data");
     reset(estadoFormulario);
       
   };
 
   const resetearScroll=() => {
-    const papel = document.querySelector('#papel');
-    papel.scrollTop = 0;
+    // const papel = document.querySelector('#papel');
+    papel.current.scrollTop = 0;
   }
 
   return (
     <Paper
-      id="papel"
+      // id="papel"
+      ref={papel}
       elevation={2}
       className={classes.root}
       style={{ overflowX: "hidden",scrollBehavior:'smooth' }}
@@ -122,6 +135,7 @@ const CreateAndUpdatePantalla = (props) => {
            
             <Controller
               name="nombre"
+              defaultValue=""
               as={
                 <TextField
                   variant="outlined"
@@ -220,6 +234,7 @@ const CreateAndUpdatePantalla = (props) => {
               <FormControl>
                 <Controller
                   name="modelo"
+                  defaultValue=""
                   as={
                     <TextField
                       label="Modelo"
@@ -247,7 +262,7 @@ const CreateAndUpdatePantalla = (props) => {
               
               as={ 
                 <TextField
-                  defaultValue="HORIZONTAL"
+                  defaultValue=""
                   variant="outlined"
                   margin="dense"
                   select
@@ -464,9 +479,10 @@ const CreateAndUpdatePantalla = (props) => {
           </FormControl>
 
           <Button
+            ref={ btnEnviar }
             autoFocus
             variant="contained"
-            id="btn-enviar"
+            // id="btn-enviar"
             color="inherit"
             type="submit"
             className={classes.buttonGhost}

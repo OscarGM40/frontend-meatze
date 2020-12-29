@@ -38,7 +38,7 @@ const useStyle = makeStyles((theme) => {
   };
 });
 
- const NavBarBottom = ({onHandleModal}) => {
+ const NavBarBottom = ({onHandleModal,setState}) => {
     
   const classes = useStyle();
 
@@ -61,7 +61,15 @@ const useStyle = makeStyles((theme) => {
         
       </Toolbar>
       <Box bgcolor="common.white" className={classes.addButton}>
-        <IconButton color="inherit" onClick={onHandleModal}>
+        <IconButton color="inherit" onClick={
+          ()=>{
+          onHandleModal();
+          setState(state => ({
+            ...state,
+            modificar:false,
+           }));
+          }
+          }>
           <AddIcon />
         </IconButton>
       </Box>

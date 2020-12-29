@@ -22,7 +22,7 @@ const estilos = makeStyles(theme => ({
    }));
 
 
-const Dashboard = (props) => {
+const Dashboard = () => {
     const classes = estilos();
 
     const { data, loading } = useFetchPantallas();
@@ -45,7 +45,10 @@ useEffect(() => {
     const [abrir, setAbrir] = useState(false);
     const [abrirModal,setAbrirModal] = useState(false);
     const [modificar, setModificar] = useState(false)
-
+    const [state,setState] = useState({
+       modificar:false,
+        valueId:"",
+    })
    
   /* cerrarModal va para el DialogPantalla,para que se pueda cerrar*/
   const cerrarModal = () => {
@@ -56,6 +59,10 @@ useEffect(() => {
      const manejarModal = () => {
         setAbrirModal(true)
       }
+      
+     
+   
+        
 
     
   return (
@@ -84,17 +91,17 @@ useEffect(() => {
            (data) =>
                
                    <ListarPantallas key={data.id} data={data}
-                   setModificar={setModificar} modificar={modificar} onHandleModal={manejarModal}
+                   setModificar={setModificar} modificar={modificar} onHandleModal={manejarModal} setState={setState}
                    />
        )
    }
 
 
           
-     <DialogPantalla openModal={abrirModal} closeModal={cerrarModal} modificar={modificar}/>
-     {props.children}
+     <DialogPantalla openModal={abrirModal} closeModal={cerrarModal} modificar={modificar} setState={setState}/>
+   
 
-    <NavBarBottom onHandleModal={manejarModal}/>
+    <NavBarBottom onHandleModal={manejarModal} setState={setState}/>
   </div>
   );
 };

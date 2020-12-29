@@ -9,7 +9,7 @@ export const useFetchPantallas = ( )=>{
     })
 
     useEffect(() => {
-       getPantallas()
+       getPantallas("getPantallas",null)
         .then( pantallas =>{ 
       
             setState({

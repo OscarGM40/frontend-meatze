@@ -1,7 +1,12 @@
 import {
+  Button,
   Card,
   CardContent,
   CardHeader,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
   IconButton,
   makeStyles,
   Menu,
@@ -12,7 +17,8 @@ import MoreVertIcon from "@material-ui/icons/MoreVert";
 import OndemandVideoIcon from "@material-ui/icons/OndemandVideo";
 import React from "react";
 import { useFetchPantalla } from "../../hooks/useFetchPantalla";
-import Fade from '@material-ui/core/Fade';
+import Fade from "@material-ui/core/Fade";
+import { useFetchDeletePantalla } from "../../hooks/useFetchDeletePantalla";
 
 const useStyle = makeStyles((theme) => ({
   mainCard: {
@@ -27,33 +33,51 @@ const useStyle = makeStyles((theme) => ({
 }));
 
 const ListarPantallas = ({
-  data: { nombre, descripcion, marca, modelo, id },modificar,setModificar,setState, onHandleModal
+  data: { nombre, descripcion, marca, modelo, _id: id },
+  modificar,
+  setModificar,
+  setState,
+  onHandleModal,
 }) => {
   const classes = useStyle();
 
-  const { data, loading } = useFetchPantalla(id);
+    const { data, loading } = useFetchPantalla(id);
+    const { state:{data:dataEliminar,loading:loadingEliminar,deletable} , setState:setStateEliminar } = useFetchDeletePantalla(id)
+
 
 
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const [anchorEl2, setAnchorEl2] = React.useState(null);
+  
   const open = Boolean(anchorEl);
+  const openDialog = Boolean(anchorEl2);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
-    
   };
 
   const handleClose = () => {
-
     setAnchorEl(null);
   };
+
+  const handleDelete = () => {
+    handleClose();
+    setAnchorEl2(true);
+
+
+
+  }
+
+  const confirmarEliminar = () => {
+
+    setStateEliminar(s => ({...s,deletable:true}));
+    setAnchorEl2(false);
+  }
+
   const handleModificar = () => {
-    //console.log("ejecutando modificar")
     setModificar(true);
     onHandleModal();
-   // console.log(id,"id")
-  }
- 
-
+  };
 
   return (
     <Card elevation={3} className={classes.mainCard}>
@@ -80,16 +104,42 @@ const ListarPantallas = ({
         onClose={handleClose}
         TransitionComponent={Fade}
       >
-        <MenuItem onClick={handleClose} >Eliminar</MenuItem>
-        <MenuItem onClick={()=>{
-          handleClose();
-        handleModificar();
-        setState(state => ({
-         ...state,
-         modificar:true,
-         valueId:id
-        }));
-        }} >Modificar</MenuItem>
+        <MenuItem 
+        onClick={handleDelete}
+        >Eliminar</MenuItem>
+      
+        <Dialog
+        open={openDialog}
+        onClose={handleClose}
+      >
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            ¿Está seguro de querer eliminar esta pantalla? La acción no se podrá restablecer
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setAnchorEl2(false)} color="primary">
+            Cancelar
+          </Button>
+          <Button onClick={confirmarEliminar} color="primary" autoFocus>
+            Aceptar
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+        <MenuItem
+          onClick={() => {
+            handleClose();
+            handleModificar();
+            setState((state) => ({
+              ...state,
+              modificar: true,
+              valueId: id,
+            }));
+          }}
+        >
+          Modificar
+        </MenuItem>
       </Menu>
       <CardContent className={classes.contentCard}>
         <Typography variant="body2" color="textSecondary" component="p">

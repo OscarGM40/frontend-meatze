@@ -1,30 +1,29 @@
-import {
-    useState,
-    useEffect
-} from 'react'
-import {
-    getPantalla
-} from './../helpers/getPantalla';
+import { useState, useEffect } from "react";
+import { getPantalla } from "../helpers/pantallas.api";
 
 export const useFetchPantalla = (id) => {
-    
-    const [state, setState] = useState({
-        data: {},
-        loading: true
-    })
+  const [state, setState] = useState({
+    data: {},
+    loading: true,
+  });
 
-    useEffect(() => {
+  useEffect(() => {
+    getPantalla(id).then((pantalla) => {
+      /*   !!pantalla.resolucion &&
+        (pantalla = {
+          ...pantalla,
+          alto: pantalla.resolucion.height,
+          ancho: pantalla.resolucion.width,
+          latitud: pantalla.location.coordinates[0],
+          longitud: pantalla.location.coordinates[1],
+        }); */
+      setState({
+        data: pantalla,
+        loading: false,
+      });
+    });
+  }, [id]);
+  //   console.log(state, "estado general");
 
-        getPantalla(id)
-            .then(pantalla => {
-                setState({
-                    data: pantalla,
-                    loading: false,
-
-                })
-            })
-
-    }, [id])
-
-    return state;
-}
+  return state;
+};

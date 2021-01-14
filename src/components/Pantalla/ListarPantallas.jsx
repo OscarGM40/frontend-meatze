@@ -34,6 +34,7 @@ const useStyle = makeStyles((theme) => ({
 
 const ListarPantallas = ({
   data: { nombre, descripcion, marca, modelo, _id: id },
+  state,
   modificar,
   setModificar,
   setState,

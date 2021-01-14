@@ -45,15 +45,6 @@ const Dashboard = () => {
 
   const { data, loading } = useFetchPantallas(state);
 
-/*   useEffect(() => {
-    const mifuncion = async () => {
-      const objetos = await getPantallas();
-
-      console.log(objetos, "Dashboard");
-    };
-
-    mifuncion();
-  }, []); */
 
   const accionAbrir = () => {
     setAbrir(!abrir);
@@ -85,6 +76,7 @@ const Dashboard = () => {
           <Loading />
         </>
       )}
+      {console.log(data.length)}
       {data.length === 0 ? <NoMatch />
       : (data.length !== 0 && data.map((data) => (
         <ListarPantallas
@@ -94,6 +86,7 @@ const Dashboard = () => {
           modificar={modificar}
           onHandleModal={manejarModal}
           setState={setState}
+          state={state}
         />
       )))}
 

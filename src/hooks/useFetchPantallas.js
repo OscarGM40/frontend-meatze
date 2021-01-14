@@ -9,11 +9,9 @@ export const useFetchPantallas = (st) => {
 
   useEffect(() => {
     getPantallas().then((pantallas) => {
-
+    
       setState({
-        data: () => {
-          return pantallas.status === 404 ? [] : pantallas
-        },
+        data:!pantallas.message ? pantallas : [],
         loading: false,
       });
     });

@@ -3,8 +3,6 @@ import ReactDOM from 'react-dom';
 import './index.css';
 
 
-
-
 import { BrowserRouter } from 'react-router-dom';
 
 import Dashboard from './components/Dashboard/Dashboard.jsx';

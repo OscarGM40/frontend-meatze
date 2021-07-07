@@ -1,7 +1,8 @@
 const token = localStorage.getItem("token") || false;
 export const API = {
   protocol: "http",
-  dominio: "192.168.4.193",
+  // dominio: "192.168.4.193",
+  dominio: "127.0.0.1",
   port: "4000",
   raiz: "api",
   _url: "pantallas",

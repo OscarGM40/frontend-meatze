@@ -1,4 +1,4 @@
-import { API, option_GET, option_POST, option_PUT, option_DELETE } from "./server.config";
+import { API, option_GET, option_POST, option_PUT } from "./server.config";
 
 /**
  * Con este método accedemos al End-Point de la API getPantallas
@@ -70,7 +70,7 @@ export const deletePantalla = async (id) => {
   try {
     const url = `${API.integrate("pantallas")}/${id}`;
 
-    const resp = await fetch(url, option_DELETE);
+    const resp = await fetch(url);
     return await resp.json();
   } catch (error) {
     return "error en deletePantalla: " + error;

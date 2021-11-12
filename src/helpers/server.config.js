@@ -1,22 +1,12 @@
 const token = localStorage.getItem("token") || false;
+
 export const API = {
   protocol: "http",
-  // dominio: "192.168.4.193",
   dominio: "127.0.0.1",
   port: "4000",
   raiz: "api",
   _url: "pantallas",
-  integrate: (url) =>
-    API.protocol +
-    ":" +
-    "//" +
-    API.dominio +
-    ":" +
-    API.port +
-    "/" +
-    API.raiz +
-    "/" +
-    (url || API._url),
+  integrate: (url) => API.protocol+"://"+API.dominio+":"+API.port+"/"+API.raiz+"/"+(url || API._url),
 };
 
 export const option_GET = {

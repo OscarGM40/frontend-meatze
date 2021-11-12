@@ -64,9 +64,6 @@ const ListarPantallas = ({
   const handleDelete = () => {
     handleClose();
     setAnchorEl2(true);
-
-
-
   }
 
   const confirmarEliminar = () => {
